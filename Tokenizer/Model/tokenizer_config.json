@@ -1,0 +1,1 @@
+{"max_len":514,"bos_token": "[CLS]", "eos_token": "[SEP]", "unk_token": "<unk>", "sep_token": "[SEP]", "cls_token": "[CLS]", "pad_token": "<pad>", "mask_token": "<mask>", "additional_special_tokens": ["[CLS]", "[SEP]"], "name_or_path": "Tokenizer/Model/sentencepiece.unigram.model.og"}
