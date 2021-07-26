@@ -13,17 +13,18 @@ To get started, install the requirements by:
 
 To generate the molecular fingerprints for the set of 500 sample SMILES given, simply download the pre-trained model weights with the script `Model/download_models.py`  and run `python main.py`. This will generate a `fingerprints.pkl` file in the `Fingerprints` folder which contains a dictionary of the SMILES and their fingerprint.
 
-To generate fingerprints on your own set of SMILES, simply format your data as a txt/smi file, with each line being a different SMILES. place your  file in the Data directory (or otherwise) change:
+To generate fingerprints on your own set of SMILES, simply format your data as a txt/smi file, with each line being a different SMILES. place your file in the Data directory (or otherwise) change:
 
-`DATA_FILE = 'Data/<your_dataset_here>'` in `main.py` 
+`DATA_DIR = '<your_dataset_directory>'` in `main.py` 
 
 you can also change other parameters depending on your dataset and setup:
 
 ```
 DEVICE = 'cpu'
 BATCH_SIZE = 1
-DATA_FILE = 'Data/sample_smiles.txt'
+DATA_DIR = 'Data/sample_smiles.txt'
 TOKENIZER_DIR = 'Tokenizer/'
+OUTPUT_DIR = 'Fingerprints/'
 ```
 
 Note: Increasing the batch size to values greater than 1 will give different results for the mean token embedding/fingerprint depending on the length of the longest SMILES in the batch.
@@ -52,7 +53,7 @@ from Model.model import MFBERT
 tokenizer = MFBERTTokenizer.from_pretrained('Tokenizer/Model/', dict_file = 'Tokenizer/Model/dict.txt')
 
 # Load model
-model = MFBERT(weights_dir='Model/weights', return_attention=False, inference_method='mean')
+model = MFBERT(weights_dir='Model/pre-trained', return_attention=False, inference_method='mean')
 
 # Tokenize SMILES
 inputs = tokenizer('CN(C)CC(=O)O', return_tensors='pt')
