@@ -98,7 +98,7 @@ Select a featurizer from `Featurizers` based on your dataset and run the script,
 Once the fingerprints are generated, you can load them into the `PCA-Kmeans.ipynb` notebook to perform the classifications and visualise the data. 
 
 ## Fine-tuning
-There are 4 sample fine-tuning scripts provided. Should you wish to fine-tune on your own data, simply clone and modify one of the fine-tuning scripts as suited for your data.
+There are 10 sample fine-tuning scripts provided. Should you wish to fine-tune on your own data, simply clone and modify one of the fine-tuning scripts as suited for your data.
 
 ## Other Scripts
 There is a simple script, `Datasets/extract_smiles.py` to create an smi file from a csv by extracting the smiles column such that they can be featurized.
