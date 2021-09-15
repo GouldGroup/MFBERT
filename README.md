@@ -66,12 +66,14 @@ fingerprint = model(inputs).detach().numpy()
 ### Virtual Screening:
 Clone the [RDkit Benchmarking Platform](https://github.com/rdkit/benchmarking_platform). 
 
-Modify `benchmarking_platform/scoring/fingerprint_lib.py` by adding a function to the `fpdict` to generate fingerprints using MFBERT.
+Modify `benchmarking_platform/scoring/fingerprint_lib.py` by adding a function to the `fpdict` to generate fingerprints using MFBERT's rdkit_featurizer.
 
 ```python
 def calc_MFBERT_fp(smile):
     inputs = tokenizer(smile, return_tensors="pt")
-    outputs = model(inputs) # model is an initialised MFBERT instance
+    ids = inputs['input_ids']
+    mask = inputs['attention_mask']
+    outputs = model(ids,mask) # model is an initialised rdkit_featurizer instance
     return outputs.detach().numpy()
 ...
 # add function pointer to fpdict dictionary
