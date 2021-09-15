@@ -9,7 +9,7 @@ import pickle
 from tqdm import tqdm
 from Tokenizer.MFBERT_Tokenizer import MFBERTTokenizer
 import numpy as np
-from sklearn.model_selection import train_test_split
+
 assert torch.cuda.device_count() == 1
 
 
@@ -21,14 +21,14 @@ LEARNING_RATE = 1e-05
 TOKENIZER_DIR = 'Tokenizer/'
 
 
-class BBBPDataset(Dataset):
+class FreeSolvDataset(Dataset):
     def __init__(self):
         examples = []
         
-        with open('Datasets/data_splits/BBBP/train.pkl', 'rb') as f:
+        with open('Datasets/data_splits/FreeSolv/train.pkl', 'rb') as f:
             traindata = pickle.load(f)
         for k,v in traindata.items():
-            examples.append((k,v))       
+            examples.append((k,v))
 
         self.data = examples
         self.tokenizer = MFBERTTokenizer.from_pretrained(TOKENIZER_DIR+'Model/',
@@ -58,10 +58,10 @@ class BBBPDataset(Dataset):
     def __len__(self):
         return len(self.data)
     
-class MFBERTForBBBP(torch.nn.Module):
+class MFBERTForFreeSolv(torch.nn.Module):
     def __init__(self):
-        super(MFBERTForBBBP, self).__init__()
-        self.l1 = list(RobertaForMaskedLM.from_pretrained('Model/pre-trained').children())[0]
+        super(MFBERTForFreeSolv, self).__init__()
+        self.l1 = list(RobertaForMaskedLM.from_pretrained('Model/weights').children())[0]
         self.l2 = torch.nn.Dropout(0.2)
         self.l3 = torch.nn.Linear(768, 1)
     
@@ -71,18 +71,20 @@ class MFBERTForBBBP(torch.nn.Module):
         output = self.l3(output_2)
         return output
     
-trainds = BBBPDataset()
+trainds = FreeSolvDataset()
 
-model = MFBERTForBBBP().cuda()
+model = MFBERTForFreeSolv().cuda()
+
 train_params = {'batch_size': TRAIN_BATCH_SIZE,
                 'shuffle': True,
                 'num_workers': 0
                 }
 
+
 training_loader = DataLoader(trainds, **train_params)
 
 # Creating the loss function and optimizer
-loss_function = torch.nn.BCEWithLogitsLoss()
+loss_function = torch.nn.MSELoss()
 optimizer = torch.optim.Adam(params =  model.parameters(), lr=LEARNING_RATE)
 
 curminloss = 1
@@ -104,7 +106,7 @@ def train(epoch):
             print(f'Epoch: {epoch}, Loss:  {loss.item()}')
             # save best model
             if loss.item()<curminloss:
-                torch.save(model, f'fine-tuned/BBBP_model_best_{loss.item()}.bin')
+                torch.save(model, f'fine-tuned/FreeSolv_model_best_{loss.item()}.bin')
                 curminloss = loss.item()
                 print('saving best...')
 
@@ -115,4 +117,4 @@ for epoch in tqdm(range(EPOCHS), desc='EPOCHS'):
     train(epoch)
 
 
-torch.save(model, 'fine-tuned/BBBP_model_last.bin')
+torch.save(model, 'fine-tuned/Freesolv_model_last.bin')

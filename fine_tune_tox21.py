@@ -22,7 +22,8 @@ TOKENIZER_DIR = 'Tokenizer/'
 df = pd.read_csv('Datasets/tox21.csv')
 df = df.dropna() # lets just drop unknowns for now
 train, test = train_test_split(df, test_size=0.2)
-
+# save test set
+test.to_csv('Datasets/data_splits/tox21_test.csv')
 
 class tox21Dataset(Dataset):
     def __init__(self, training=True):

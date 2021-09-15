@@ -10,12 +10,18 @@ base_path = sys.path[0]+'/'
 DATA_URLS = {'1':'https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/BBBP.csv',
           '2':'https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/clintox.csv.gz',
           '3':'https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/HIV.csv',
-          '4':'https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/tox21.csv.gz'}
+          '4':'https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/tox21.csv.gz',
+          '5':'https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/Lipophilicity.csv',
+          '6':'https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/delaney-processed.csv',
+          '7':'https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/SAMPL.csv'}
 
 DATA_NAMES = {'1':'BBBP',
           '2':'Clintox',
           '3':'HIV',
-          '4':'tox21'}
+          '4':'tox21',
+          '5':'Lipophilicity',
+          '6':'ESOL',
+          '7':'FreeSolv'}
 
 def download_and_extract(selected):
     for ds in tqdm(selected):
@@ -48,11 +54,14 @@ if __name__=='__main__':
     2: Clintox
     3: HIV
     4: tox21
+    5: Lipophilicity
+    6: ESOL
+    7: FreeSolv
     
 ''')
 
     if '0' in model_selection:
-        selected = ['1','2','3','4']
+        selected = ['1','2','3','4','5','6','7']
     else:
         selected = [i.strip() for i in model_selection.split(',')]
 

@@ -19,8 +19,6 @@ VALID_BATCH_SIZE = 8
 EPOCHS = 10
 LEARNING_RATE = 1e-05
 TOKENIZER_DIR = 'Tokenizer/'
-df = pd.read_csv('Datasets/Clintox.csv')
-train, test = train_test_split(df, test_size=0.2)
 
 
 
@@ -28,12 +26,12 @@ train, test = train_test_split(df, test_size=0.2)
 class ClintoxDataset(Dataset):
     def __init__(self, training=True):
         examples = []
-        if training:
-            for _, row in train.iterrows():
-                examples.append((row['smiles'], row['CT_TOX']))
-        else:
-            for _, row in test.iterrows():
-                examples.append((row['smiles'], row['CT_TOX']))           
+
+        with open('Datasets/data_splits/ClinTox/train.pkl', 'rb') as f:
+            traindata = pickle.load(f)
+        for k,v in traindata.items():
+            examples.append((k,v))       
+ 
 
         self.data = examples
         self.tokenizer = MFBERTTokenizer.from_pretrained(TOKENIZER_DIR+'Model/',
@@ -80,11 +78,6 @@ trainds = ClintoxDataset()
 
 model = MFBERTForClintox().cuda()
 train_params = {'batch_size': TRAIN_BATCH_SIZE,
-                'shuffle': True,
-                'num_workers': 0
-                }
-
-test_params = {'batch_size': VALID_BATCH_SIZE,
                 'shuffle': True,
                 'num_workers': 0
                 }

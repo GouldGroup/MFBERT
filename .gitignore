@@ -140,3 +140,4 @@ cython_debug/
 # MAC OS pain
 .DS_Store
 .DS_Store/
+__MACOSX/

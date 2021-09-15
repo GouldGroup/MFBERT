@@ -43,7 +43,7 @@ if __name__ == '__main__':
     tokenizer = MFBERTTokenizer.from_pretrained(TOKENIZER_DIR+'Model/',
                                                 dict_file = TOKENIZER_DIR+'Model/dict.txt')
 
-    model = torch.load('../Model/fine_tuned/Clintox/pytorch_model.bin', map_location=DEVICE).to(DEVICE)
+    model = torch.load('../Model/fine_tuned/Clintox_featurizer/pytorch_model.bin', map_location=DEVICE).to(DEVICE)
 
     for DATA_FILE in tqdm(os.listdir(DATA_DIR)):
         if DATA_FILE.startswith('.'):
@@ -62,13 +62,13 @@ if __name__ == '__main__':
 
             # Note the padding tokens will affect the mean embedding
             inputs = tokenizer(smiles_batch, return_tensors='pt', padding=True, truncation=True).to(DEVICE)
-            
-            try:
-                res = model(inputs).detach().numpy() # numpy tensor of mean embeddings/batch
-                all_res.append((smiles_batch,res))
-            except:
-                excepted.append(smiles_batch)
-                excepted_counter+=1
+            with torch.no_grad():
+                try:
+                    res = model(inputs).detach().numpy() # numpy tensor of mean embeddings/batch
+                    all_res.append((smiles_batch,res))
+                except:
+                    excepted.append(smiles_batch)
+                    excepted_counter+=1
 
         print('EXCEPTIONS OCCURED TOTAL:',excepted_counter)
                 
